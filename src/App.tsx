@@ -108,30 +108,36 @@ export default function App() {
   const filteredTargets = targets.filter(t => t.url.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-300 font-sans flex flex-col md:flex-row overflow-hidden selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-[#0B0F19] text-slate-300 font-sans flex flex-col overflow-hidden selection:bg-indigo-500/30">
       
-      {/* Sidebar */}
-      <aside className="w-full md:w-96 flex-shrink-0 bg-[#0F1423] border-r border-slate-800/60 flex flex-col h-screen md:h-screen">
-        <div className="p-6 border-b border-slate-800/60">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <Activity className="text-white" size={20} strokeWidth={2.5} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Nexus Pinger</h1>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-xs text-slate-500 font-medium tracking-wide">ENTERPRISE KEEP-ALIVE</p>
-                <button 
-                  onClick={() => setShowDeployModal(true)}
-                  className="px-2 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-[10px] font-bold flex items-center gap-1 hover:bg-orange-500/20 transition-colors"
-                  title="Deploy to Cloudflare"
-                >
-                  <Cloud size={10} />
-                  CF READY
-                </button>
-              </div>
-            </div>
+      {/* Top Navigation Bar */}
+      <header className="flex-shrink-0 bg-[#0F1423] border-b border-slate-800/60 p-4 md:px-6 flex items-center justify-between z-20 relative">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 relative">
+            <div className="absolute inset-0 bg-indigo-500 rounded-xl animate-ping opacity-20"></div>
+            <Activity className="text-white relative z-10" size={20} strokeWidth={2.5} />
           </div>
+          <div>
+            <h1 className="text-xl font-bold text-white tracking-tight leading-tight">CF PINGER</h1>
+            <p className="text-[10px] sm:text-xs text-slate-400 font-medium tracking-widest mt-0.5">ENTERPRISE KEEP-ALIVE</p>
+          </div>
+        </div>
+        <div>
+          <button 
+            onClick={() => setShowDeployModal(true)}
+            className="px-3 py-2 sm:py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold flex items-center gap-2 hover:bg-orange-500/20 transition-all shadow-[0_0_15px_rgba(249,115,22,0.15)] group"
+            title="Deploy to Cloudflare"
+          >
+            <Cloud size={16} className="group-hover:animate-bounce" />
+            <span className="hidden sm:inline">CF READY</span>
+          </button>
+        </div>
+      </header>
+
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-full md:w-96 flex-shrink-0 bg-[#0F1423] md:border-r border-b md:border-b-0 border-slate-800/60 flex flex-col h-[45vh] md:h-auto overflow-hidden">
+          <div className="p-5 md:p-6 border-b border-slate-800/60">
 
           <form onSubmit={handleAdd} className="space-y-4">
             <div className="space-y-3">
@@ -145,7 +151,7 @@ export default function App() {
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="https://app.onrender.com"
                   required
-                  className="w-full bg-[#151B2B] border border-slate-700/50 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
+                  className="w-full bg-[#151B2B] border border-slate-700/50 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all h-[42px]"
                 />
               </div>
               
@@ -161,7 +167,7 @@ export default function App() {
                     onChange={(e) => setIntervalVal(e.target.value)}
                     placeholder="Interval"
                     required
-                    className="w-full bg-[#151B2B] border border-slate-700/50 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
+                    className="w-full bg-[#151B2B] border border-slate-700/50 rounded-lg pl-9 pr-12 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all h-[42px]"
                   />
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <span className="text-xs text-slate-500 font-medium">Menit</span>
@@ -170,7 +176,7 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-lg shadow-indigo-600/20"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors disabled:opacity-50 shadow-lg shadow-indigo-600/20 shrink-0 h-[42px]"
                 >
                   {loading ? <RefreshCw size={16} className="animate-spin" /> : <Plus size={16} />}
                   Add
@@ -182,7 +188,7 @@ export default function App() {
         </div>
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
-          <div className="p-4 space-y-2">
+          <div className="p-4 space-y-3">
             <div className="relative mb-4">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
               <input
@@ -231,7 +237,7 @@ export default function App() {
                     
                     <div
                       onClick={(e) => handleDelete(target.id, e)}
-                      className="p-1.5 text-slate-600 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors opacity-0 group-hover:opacity-100"
+                      className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 flex-shrink-0"
                     >
                       <Trash2 size={14} />
                     </div>
@@ -260,9 +266,9 @@ export default function App() {
                   <Server size={12} />
                   <span>Target Configuration</span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-start md:items-center gap-3">
-                  <span className="break-all">{selectedTarget.url}</span>
-                  <a href={selectedTarget.url} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-400 transition-colors shrink-0 mt-1 md:mt-0">
+                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-center gap-3 overflow-hidden">
+                  <span className="truncate">{selectedTarget.url}</span>
+                  <a href={selectedTarget.url} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-400 transition-colors shrink-0">
                     <ArrowUpRight size={24} strokeWidth={2.5} />
                   </a>
                 </h2>
@@ -282,13 +288,21 @@ export default function App() {
                 </div>
               </div>
               
-              <div className="flex items-center gap-3">
-                <div className="text-right">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="text-left sm:text-right">
                   <div className="text-xs text-slate-500 mb-1">Ping Terakhir</div>
                   <div className="font-mono text-sm text-slate-300">
                     {selectedTarget.lastPing ? format(new Date(selectedTarget.lastPing), 'dd MMM yyyy, HH:mm:ss') : '-'}
                   </div>
                 </div>
+                
+                <button
+                  onClick={(e) => handleDelete(selectedTarget.id, e)}
+                  className="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors shrink-0"
+                >
+                  <Trash2 size={16} />
+                  Hapus
+                </button>
               </div>
             </header>
 
@@ -346,15 +360,15 @@ export default function App() {
 
                   {/* History Table */}
                   <div className="bg-[#151B2B] rounded-2xl border border-slate-800/60 shadow-xl overflow-hidden flex flex-col">
-                    <div className="p-6 border-b border-slate-800/60 flex items-center justify-between">
+                    <div className="p-5 md:p-6 border-b border-slate-800/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-800 rounded-lg">
-                          <Database size={18} className="text-slate-300" />
+                        <div className="p-2 bg-slate-800/50 rounded-lg">
+                          <Database size={18} className="text-indigo-400" />
                         </div>
                         <h3 className="font-semibold text-white">Riwayat Payload & Request</h3>
                       </div>
-                      <div className="text-xs font-medium text-slate-500">
-                        Menampilkan {Math.min(history.length, 50)} data terakhir
+                      <div className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-full border border-indigo-500/20 w-fit">
+                        Menampilkan {Math.min(history.length, 10)} data terakhir
                       </div>
                     </div>
                     
@@ -370,7 +384,7 @@ export default function App() {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-slate-800/50">
-                            {history.slice(0, 50).map((ping, idx) => (
+                            {history.slice(0, 10).map((ping, idx) => (
                               <tr key={idx} className="hover:bg-slate-800/30 transition-colors">
                                 <td className="px-6 py-4 text-slate-300 font-mono text-xs">
                                   {format(new Date(ping.timestamp), 'dd MMM, HH:mm:ss')}
@@ -423,6 +437,7 @@ export default function App() {
           </div>
         )}
       </main>
+      </div>
 
       {/* Deploy Modal */}
       {showDeployModal && (
