@@ -1,5 +1,5 @@
 name = "nexus-pinger"
-main = "public/_worker.js"
+main = "worker.js"
 compatibility_date = "2024-03-20"
 
 [assets]

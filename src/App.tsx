@@ -38,16 +38,20 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeployModal, setShowDeployModal] = useState(false);
 
+// Cloudflare Worker and KV have been configured
   const fetchTargets = async () => {
     try {
       const res = await fetch('/api/targets');
+      if (!res.ok) throw new Error('Server error');
       const data = await res.json();
       setTargets(data);
       if (data.length > 0 && !selectedId) {
         setSelectedId(data[0].id);
       }
+      setError('');
     } catch (err) {
       console.error('Failed to fetch targets:', err);
+      // Don't show aggressive error if it's just a dev server restart
     }
   };
 
@@ -459,7 +463,7 @@ export default function App() {
               <div className="bg-orange-500/10 border border-orange-500/20 p-4 rounded-xl flex items-start gap-3">
                 <Server className="text-orange-400 shrink-0 mt-0.5" size={18} />
                 <p className="text-xs text-orange-200/80 leading-relaxed">
-                  File <strong>public/_worker.js</strong> dan <strong>wrangler.toml</strong> telah dibuat otomatis di dalam project ini. File ini mengatur Cron API dan database KV (vles_kv).
+                  File <strong>worker.js</strong> dan <strong>wrangler.toml</strong> telah dibuat otomatis di dalam project ini. File ini mengatur Cron API dan database KV (vles_kv).
                 </p>
               </div>
             </div>
