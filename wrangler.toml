@@ -1,4 +1,4 @@
-name = "nexus-pinger"
+name = "ping"
 main = "worker.js"
 compatibility_date = "2024-03-20"
 
