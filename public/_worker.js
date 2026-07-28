@@ -7,8 +7,14 @@ export default {
       return this.handleApi(request, env);
     }
 
-    // 2. Serve static assets directly from Cloudflare Pages
-    return env.ASSETS.fetch(request);
+    // 2. Serve SPA fallback (index.html) for non-API routes
+    // When using standard Workers with [assets], static files are served BEFORE the worker automatically.
+    // If a request reaches here and it's not an API route, it's likely a SPA route (e.g. /dashboard).
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(new Request(new URL("/", request.url), request));
+    }
+    
+    return new Response("Not Found", { status: 404 });
   },
 
   async handleApi(request, env) {
