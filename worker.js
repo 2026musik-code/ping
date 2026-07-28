@@ -68,10 +68,11 @@ export default {
             ctx.waitUntil((async () => {
               try {
                 const res = await fetch(targetUrl, {
+                  method: 'HEAD',
                   headers: { 'User-Agent': 'Nexus-Pinger-Cloudflare-Worker' }
                 });
-                const arrayBuffer = await res.arrayBuffer();
-                const sizeBytes = arrayBuffer.byteLength;
+                const contentLength = res.headers.get('content-length');
+                const sizeBytes = contentLength ? parseInt(contentLength, 10) : 0;
                 
                 newTarget.lastPing = new Date().toISOString();
                 newTarget.status = res.ok ? 'success' : 'error';
@@ -154,10 +155,11 @@ export default {
       if (!lastPingTime || (now - lastPingTime) >= intervalMs) {
         try {
           const res = await fetch(target.url, {
+            method: 'HEAD',
             headers: { 'User-Agent': 'Nexus-Pinger-Cloudflare-Worker' }
           });
-          const arrayBuffer = await res.arrayBuffer();
-          const sizeBytes = arrayBuffer.byteLength;
+          const contentLength = res.headers.get('content-length');
+          const sizeBytes = contentLength ? parseInt(contentLength, 10) : 0;
           
           target.lastPing = new Date().toISOString();
           target.status = res.ok ? 'success' : 'error';

@@ -43,9 +43,12 @@ function saveData() {
 
 async function performPing(target: Target) {
   try {
-    const res = await fetch(target.url);
-    const buffer = await res.arrayBuffer();
-    const sizeBytes = buffer.byteLength;
+    const res = await fetch(target.url, {
+      method: 'HEAD',
+      headers: { 'User-Agent': 'Nexus-Pinger' }
+    });
+    const contentLength = res.headers.get('content-length');
+    const sizeBytes = contentLength ? parseInt(contentLength, 10) : 0;
     
     target.lastPing = new Date().toISOString();
     target.status = res.ok ? 'success' : 'error';
