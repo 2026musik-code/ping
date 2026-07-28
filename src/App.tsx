@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { CountdownTimer } from "./CountdownTimer";
 import { Globe, Trash2, Activity, Plus, RefreshCw, CheckCircle2, XCircle, Clock, CalendarDays, Calendar, Database, Search, Timer, ArrowRight, ArrowUpRight, Server, ShieldCheck, ChevronRight, Cloud } from 'lucide-react';
 import { format, isToday, isThisWeek, isThisMonth } from 'date-fns';
 
@@ -220,10 +221,11 @@ export default function App() {
                           {target.url.replace(/^https?:\/\//, '')}
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                      <div className="text-xs text-slate-500 mt-1 flex flex-wrap items-center gap-2">
                         <span className="flex items-center gap-1"><Clock size={10} /> {target.interval}m</span>
                         <span>•</span>
                         <span>{target.lastPing ? format(new Date(target.lastPing), 'HH:mm') : 'Menunggu'}</span>
+                        <CountdownTimer lastPing={target.lastPing} interval={target.interval} />
                       </div>
                     </div>
                     
@@ -258,9 +260,9 @@ export default function App() {
                   <Server size={12} />
                   <span>Target Configuration</span>
                 </div>
-                <h2 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-                  {selectedTarget.url}
-                  <a href={selectedTarget.url} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-400 transition-colors">
+                <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight flex items-start md:items-center gap-3">
+                  <span className="break-all">{selectedTarget.url}</span>
+                  <a href={selectedTarget.url} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-indigo-400 transition-colors shrink-0 mt-1 md:mt-0">
                     <ArrowUpRight size={24} strokeWidth={2.5} />
                   </a>
                 </h2>

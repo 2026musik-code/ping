@@ -4,7 +4,7 @@ export default {
     
     // 1. Intercept API routes
     if (url.pathname.startsWith("/api/")) {
-      return this.handleApi(request, env);
+      return this.handleApi(request, env, ctx);
     }
 
     // 2. Serve SPA fallback (index.html) for non-API routes
@@ -17,7 +17,7 @@ export default {
     return new Response("Not Found", { status: 404 });
   },
 
-  async handleApi(request, env) {
+  async handleApi(request, env, ctx) {
     const url = new URL(request.url);
     
     // Safety check in case KV is not bound
@@ -49,6 +49,7 @@ export default {
             });
           }
           
+          
           const newTarget = {
             id: crypto.randomUUID(),
             url: targetUrl,
@@ -62,9 +63,53 @@ export default {
           targets.push(newTarget);
           await env.vles_kv.put("targets", JSON.stringify(targets));
           
+          // Lakukan initial ping secara async
+          if (ctx && ctx.waitUntil) {
+            ctx.waitUntil((async () => {
+              try {
+                const res = await fetch(targetUrl, {
+                  headers: { 'User-Agent': 'Nexus-Pinger-Cloudflare-Worker' }
+                });
+                const arrayBuffer = await res.arrayBuffer();
+                const sizeBytes = arrayBuffer.byteLength;
+                
+                newTarget.lastPing = new Date().toISOString();
+                newTarget.status = res.ok ? 'success' : 'error';
+                newTarget.statusCode = res.status;
+                newTarget.history.unshift({
+                  timestamp: Date.now(),
+                  sizeBytes,
+                  status: res.status,
+                  ok: res.ok
+                });
+              } catch (err) {
+                newTarget.lastPing = new Date().toISOString();
+                newTarget.status = 'error';
+                newTarget.statusCode = null;
+                newTarget.history.unshift({
+                  timestamp: Date.now(),
+                  sizeBytes: 0,
+                  status: 0,
+                  ok: false
+                });
+              }
+              // save again
+              const currentStr = await env.vles_kv.get("targets");
+              if (currentStr) {
+                const currentTargets = JSON.parse(currentStr);
+                const idx = currentTargets.findIndex(t => t.id === newTarget.id);
+                if (idx !== -1) {
+                  currentTargets[idx] = newTarget;
+                  await env.vles_kv.put("targets", JSON.stringify(currentTargets));
+                }
+              }
+            })());
+          }
+          
           return new Response(JSON.stringify(newTarget), { 
             headers: { "Content-Type": "application/json" } 
           });
+
         }
       }
 
