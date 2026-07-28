@@ -1,0 +1,12 @@
+name = "nexus-pinger"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-03-20"
+
+# Cron trigger setiap 1 menit (Worker akan mengecek interval tiap URL)
+[triggers]
+crons = ["* * * * *"]
+
+# Binding KV Namespace untuk database sesuai pilihan Anda
+[[kv_namespaces]]
+binding = "vles_kv"
+id = "684d85d704bf4ef6bb4ddec1cfe30320"
