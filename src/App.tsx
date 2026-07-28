@@ -43,7 +43,7 @@ export default function App() {
   const fetchTargets = async () => {
     try {
       const res = await fetch('/api/targets');
-      if (!res.ok) throw new Error('Server error');
+      if (!res.ok) return;
       const data = await res.json();
       setTargets(data);
       if (data.length > 0 && !selectedId) {
@@ -51,7 +51,6 @@ export default function App() {
       }
       setError('');
     } catch (err) {
-      console.error('Failed to fetch targets:', err);
       // Don't show aggressive error if it's just a dev server restart
     }
   };
